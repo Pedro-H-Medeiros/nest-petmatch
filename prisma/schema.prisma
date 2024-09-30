@@ -1,0 +1,78 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  MEMBER
+  ADMIN
+}
+
+enum AdoptionStatus {
+  AVAILABLE
+  PENDING
+  ADOPTED
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  cpf       String   @unique
+  phone     String   @unique
+  name      String
+  password  String
+  image_url String
+  role      UserRole
+
+  adoption Adoption[]
+
+  @@map("users")
+}
+
+model Animal {
+  id              String         @id @default(uuid())
+  ong_id          String
+  name            String
+  age             DateTime
+  sex             String
+  race            String
+  color           String
+  adoption_status AdoptionStatus @default(AVAILABLE)
+  image_urls      String[]
+  created_at      DateTime       @default(now())
+
+  adoption Adoption[]
+  ong      Ong        @relation(fields: [ong_id], references: [id])
+
+  @@map("animals")
+}
+
+model Ong {
+  id          String   @id @default(uuid())
+  animal_id   String
+  name        String
+  description String
+  image_user  String
+  image_urls  String[]
+  created_at  DateTime @default(now())
+
+  animals Animal[]
+
+  @@map("ongs")
+}
+
+model Adoption {
+  id         String   @id @default(uuid())
+  user_id    String
+  animal_id  String
+  adopted_at DateTime
+
+  user   User   @relation(fields: [user_id], references: [id])
+  animal Animal @relation(fields: [animal_id], references: [id])
+
+  @@map("adoptions")
+}
