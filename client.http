@@ -1,0 +1,28 @@
+@baseUrl = http://localhost:3333
+@authToken = {{authenticate.response.body.accessToken}}
+
+# @name create_account
+POST {{baseUrl}}/accounts
+Content-Type: application/json
+
+{
+  "name": "Pedro",
+  "cpf": "123.456.789-07",
+  "email": "pedro54@gmail.com",
+  "phone": "123456741",
+  "password": "12345678",
+  "image_url": "http://www.davidhechler.com/child-abuse/500x500-dummy-image/"
+}
+
+###
+
+# @name authenticate
+POST {{baseUrl}}/sessions
+Content-Type: application/json
+
+{
+  "email": "pedro@gmail.com",
+  "password": "12345678"
+}
+
+###

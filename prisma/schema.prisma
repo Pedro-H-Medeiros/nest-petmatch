@@ -19,12 +19,14 @@ enum AdoptionStatus {
 }
 
 model User {
-  id            String   @id @default(uuid())
-  cpf           String   @unique
-  name          String
-  password_hash String
-  image_url     String
-  role          UserRole
+  id        String   @id @default(uuid())
+  email     String   @unique
+  cpf       String   @unique
+  phone     String   @unique
+  name      String
+  password  String
+  image_url String
+  role      UserRole
 
   adoption Adoption[]
 
