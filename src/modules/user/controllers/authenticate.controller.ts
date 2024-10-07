@@ -8,7 +8,7 @@ import {
   UsePipes,
 } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
-import { compare } from 'bcrypt'
+import { compare } from 'bcryptjs'
 import { z } from 'zod'
 
 const authenticateControllerBodySchema = z.object({

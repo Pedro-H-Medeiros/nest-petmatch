@@ -6,12 +6,13 @@ POST {{baseUrl}}/accounts
 Content-Type: application/json
 
 {
-  "name": "Pedro",
-  "cpf": "123.456.789-07",
-  "email": "pedro54@gmail.com",
-  "phone": "123456741",
+  "name": "John Doe",
+  "email": "johndoe@example.com",
+  "cpf": "123.456.789-00",
+  "phone": "123456789",
   "password": "12345678",
-  "image_url": "http://www.davidhechler.com/child-abuse/500x500-dummy-image/"
+  "image_url": "http://example.com",
+  "role": "MEMBER"
 }
 
 ###
@@ -21,7 +22,7 @@ POST {{baseUrl}}/sessions
 Content-Type: application/json
 
 {
-  "email": "pedro@gmail.com",
+  "email": "johndoe@example.com",
   "password": "12345678"
 }
 
