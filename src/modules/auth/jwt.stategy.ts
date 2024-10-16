@@ -1,5 +1,5 @@
 import { Env } from '@/env'
-import { Injectable } from '@nestjs/common'
+import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { PassportStrategy } from '@nestjs/passport'
 import { ExtractJwt, Strategy } from 'passport-jwt'
@@ -14,7 +14,7 @@ export type UserPayload = z.infer<typeof tokenPayloadSchema>
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(config: ConfigService<Env, true>) {
-    const publicKey = config.get('JWT_PRIVATE_KEY', { infer: true })
+    const publicKey = config.get('JWT_PUBLIC_KEY', { infer: true })
 
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -24,6 +24,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: UserPayload) {
-    return tokenPayloadSchema.parse(payload)
+    try {
+      return tokenPayloadSchema.parse(payload)
+    } catch (error) {
+      throw new UnauthorizedException('invalid token or malformed')
+    }
   }
 }

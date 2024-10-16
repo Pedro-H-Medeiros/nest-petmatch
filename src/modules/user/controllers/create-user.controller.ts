@@ -6,7 +6,7 @@ import {
   UsePipes,
 } from '@nestjs/common'
 import { PrismaService } from '@/prisma/prisma.service'
-import { hash } from 'bcrypt'
+import { hash } from 'bcryptjs'
 import { z } from 'zod'
 import { ZodValidationPipe } from '@/pipes/zod-validation.pipe'
 import validator from 'validator'
@@ -32,7 +32,7 @@ export class CreateUserController {
 
   @Post()
   @UsePipes(new ZodValidationPipe(createUserControllerBodySchema))
-  async handle(@Body() body: CreateUserControllerBodySchema) {
+  async create(@Body() body: CreateUserControllerBodySchema) {
     const { name, cpf, email, phone, password, image_url, role } = body
 
     const existingUser = await Promise.all([

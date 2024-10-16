@@ -6,12 +6,13 @@ POST {{baseUrl}}/accounts
 Content-Type: application/json
 
 {
-  "name": "Pedro",
-  "cpf": "123.456.789-07",
-  "email": "pedro54@gmail.com",
-  "phone": "123456741",
+  "name": "John Doe",
+  "email": "johndoe@example.com",
+  "cpf": "123.456.789-00",
+  "phone": "123456789",
   "password": "12345678",
-  "image_url": "http://www.davidhechler.com/child-abuse/500x500-dummy-image/"
+  "image_url": "http://example.com",
+  "role": "ADMIN"
 }
 
 ###
@@ -21,8 +22,28 @@ POST {{baseUrl}}/sessions
 Content-Type: application/json
 
 {
-  "email": "pedro@gmail.com",
+  "email": "johndoe@example.com",
   "password": "12345678"
 }
 
 ###
+
+# @name create_animal
+POST {{baseUrl}}/pets
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "name": "Rex",
+  "age": "2020-08-10T00:00:00.000Z",
+  "sex": "Male",
+  "race": "Golden Retriever",
+  "color": "Golden",
+  "image_urls": ["https://example.com/rex1.jpg", "https://example.com/rex2.jpg"]
+}
+
+###
+
+# @name get_animal
+GET {{baseUrl}}/pets
+Authorization: Bearer {{authToken}}

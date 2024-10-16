@@ -1,10 +1,9 @@
 import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { envSchema } from './env'
-import { PrismaService } from './prisma/prisma.service'
-import { CreateUserController } from './controllers/create-user.controller'
-import { AuthModule } from './auth/auth.module'
-import { AuthenticateController } from './controllers/authenticate.controller'
+import { AuthModule } from './modules/auth/auth.module'
+import { UserModule } from './modules/user/user.module'
+import { AnimalModule } from './modules/animal/animal.module'
 
 @Module({
   imports: [
@@ -13,8 +12,10 @@ import { AuthenticateController } from './controllers/authenticate.controller'
       isGlobal: true,
     }),
     AuthModule,
+    UserModule,
+    AnimalModule,
   ],
-  controllers: [CreateUserController, AuthenticateController],
-  providers: [PrismaService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}
