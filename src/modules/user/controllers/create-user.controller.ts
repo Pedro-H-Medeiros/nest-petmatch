@@ -11,6 +11,7 @@ import { z } from 'zod'
 import { ZodValidationPipe } from '@/pipes/zod-validation.pipe'
 import validator from 'validator'
 import { UserRole } from '@prisma/client'
+import { Public } from '@/modules/auth/public-routes.decorator'
 
 const createUserControllerBodySchema = z.object({
   name: z.string(),
@@ -30,6 +31,7 @@ type CreateUserControllerBodySchema = z.infer<
 export class CreateUserController {
   constructor(private prisma: PrismaService) {}
 
+  @Public()
   @Post()
   @UsePipes(new ZodValidationPipe(createUserControllerBodySchema))
   async create(@Body() body: CreateUserControllerBodySchema) {
