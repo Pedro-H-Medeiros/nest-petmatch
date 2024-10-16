@@ -1,3 +1,4 @@
+import { JwtAuthGuard } from '@/modules/auth/jwt-auth.guard'
 import { ZodValidationPipe } from '@/pipes/zod-validation.pipe'
 import { PrismaService } from '@/prisma/prisma.service'
 import {
@@ -5,6 +6,7 @@ import {
   ConflictException,
   Controller,
   Post,
+  UseGuards,
   UsePipes,
 } from '@nestjs/common'
 import { z } from 'zod'
@@ -19,6 +21,7 @@ const createOngControllerBodySchema = z.object({
 type CreateOngControllerSchema = z.infer<typeof createOngControllerBodySchema>
 
 @Controller('instituation')
+@UseGuards(JwtAuthGuard)
 export class CreateOngController {
   constructor(private prisma: PrismaService) {}
 

@@ -1,8 +1,9 @@
 import { CurrentUser } from '@/modules/auth/current-user.decorator'
+import { JwtAuthGuard } from '@/modules/auth/jwt-auth.guard'
 import { UserPayload } from '@/modules/auth/jwt.stategy'
 import { ZodValidationPipe } from '@/pipes/zod-validation.pipe'
 import { PrismaService } from '@/prisma/prisma.service'
-import { Body, Controller, Patch, UsePipes } from '@nestjs/common'
+import { Body, Controller, Patch, UseGuards, UsePipes } from '@nestjs/common'
 import { z } from 'zod'
 
 const updateOngControllerBodySchema = z.object({
@@ -14,6 +15,7 @@ type UpdateOngControllerBodySchema = z.infer<
 >
 
 @Controller('instituation')
+@UseGuards(JwtAuthGuard)
 export class UpdateOngController {
   constructor(private prisma: PrismaService) {}
 

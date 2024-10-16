@@ -1,7 +1,8 @@
 import { CurrentUser } from '@/modules/auth/current-user.decorator'
+import { JwtAuthGuard } from '@/modules/auth/jwt-auth.guard'
 import { UserPayload } from '@/modules/auth/jwt.stategy'
 import { PrismaService } from '@/prisma/prisma.service'
-import { Body, Controller, Post } from '@nestjs/common'
+import { Body, Controller, Post, UseGuards } from '@nestjs/common'
 import { AdoptionStatus } from '@prisma/client'
 import { z } from 'zod'
 
@@ -20,6 +21,7 @@ type CreateAnimalControllerBodySchema = z.infer<
 >
 
 @Controller('/pets')
+@UseGuards(JwtAuthGuard)
 export class CreateAnimalController {
   constructor(private prisma: PrismaService) {}
 
