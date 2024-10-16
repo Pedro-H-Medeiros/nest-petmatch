@@ -47,3 +47,37 @@ Authorization: Bearer {{authToken}}
 # @name get_animal
 GET {{baseUrl}}/pets
 Authorization: Bearer {{authToken}}
+
+###
+
+# @name create_ong
+POST {{baseUrl}}/instituation
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "name": "Animal 1 Organization",
+  "description": "An organization dedicated to helping animals find homes.",
+  "image_user": "https://example.com/image.jpg",
+  "image_urls": [
+    "https://example.com/animal1.jpg",
+    "https://example.com/animal2.jpg"
+  ]
+}
+
+###
+
+# @name get_ong
+GET {{baseUrl}}/instituation
+Authorization: Bearer {{authToken}}
+
+###
+
+# @name update_ong
+PATCH {{baseUrl}}/instituation
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "name": "Animal Organization"
+}
