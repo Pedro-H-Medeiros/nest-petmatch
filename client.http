@@ -12,7 +12,7 @@ Content-Type: application/json
   "phone": "123456789",
   "password": "12345678",
   "image_url": "http://example.com",
-  "role": "MEMBER"
+  "role": "ADMIN"
 }
 
 ###
@@ -27,3 +27,23 @@ Content-Type: application/json
 }
 
 ###
+
+# @name create_animal
+POST {{baseUrl}}/pets
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "name": "Rex",
+  "age": "2020-08-10T00:00:00.000Z",
+  "sex": "Male",
+  "race": "Golden Retriever",
+  "color": "Golden",
+  "image_urls": ["https://example.com/rex1.jpg", "https://example.com/rex2.jpg"]
+}
+
+###
+
+# @name get_animal
+GET {{baseUrl}}/pets
+Authorization: Bearer {{authToken}}
