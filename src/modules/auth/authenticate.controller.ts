@@ -10,7 +10,6 @@ import {
 import { JwtService } from '@nestjs/jwt'
 import { compare } from 'bcryptjs'
 import { z } from 'zod'
-import { Public } from './public-routes.decorator'
 
 const authenticateControllerBodySchema = z.object({
   email: z.string().email(),
@@ -28,7 +27,6 @@ export class AuthenticateController {
     private prisma: PrismaService,
   ) {}
 
-  @Public()
   @Post()
   @UsePipes(new ZodValidationPipe(authenticateControllerBodySchema))
   async handle(@Body() body: AuthenticateControllerBodySchema) {

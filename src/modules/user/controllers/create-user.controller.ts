@@ -3,6 +3,7 @@ import {
   ConflictException,
   Controller,
   Post,
+  UseGuards,
   UsePipes,
 } from '@nestjs/common'
 import { PrismaService } from '@/prisma/prisma.service'
@@ -11,7 +12,7 @@ import { z } from 'zod'
 import { ZodValidationPipe } from '@/pipes/zod-validation.pipe'
 import validator from 'validator'
 import { UserRole } from '@prisma/client'
-import { Public } from '@/modules/auth/public-routes.decorator'
+import { JwtAuthGuard } from '@/modules/auth/jwt-auth.guard'
 
 const createUserControllerBodySchema = z.object({
   name: z.string(),
@@ -28,10 +29,10 @@ type CreateUserControllerBodySchema = z.infer<
 >
 
 @Controller('/accounts')
+@UseGuards(JwtAuthGuard)
 export class CreateUserController {
   constructor(private prisma: PrismaService) {}
 
-  @Public()
   @Post()
   @UsePipes(new ZodValidationPipe(createUserControllerBodySchema))
   async create(@Body() body: CreateUserControllerBodySchema) {

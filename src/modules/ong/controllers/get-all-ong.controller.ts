@@ -1,7 +1,9 @@
+import { JwtAuthGuard } from '@/modules/auth/jwt-auth.guard'
 import { PrismaService } from '@/prisma/prisma.service'
-import { Controller, Get } from '@nestjs/common'
+import { Controller, Get, UseGuards } from '@nestjs/common'
 
 @Controller('instituation')
+@UseGuards(JwtAuthGuard)
 export class GetAllOngController {
   constructor(private prisma: PrismaService) {}
 

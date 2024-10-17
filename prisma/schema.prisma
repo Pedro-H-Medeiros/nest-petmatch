@@ -11,6 +11,7 @@ enum UserRole {
   MEMBER
   ADMIN
   ONG_ADMIN
+  USER
 }
 
 enum AdoptionStatus {
