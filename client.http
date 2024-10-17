@@ -6,13 +6,13 @@ POST {{baseUrl}}/accounts
 Content-Type: application/json
 
 {
-  "name": "John Doe",
-  "email": "johndoe@example.com",
-  "cpf": "123.456.789-00",
-  "phone": "123456789",
+  "name": "USER MEMBER",
+  "email": "usermember@example.com",
+  "cpf": "123.456.789-01",
+  "phone": "1234567891",
   "password": "12345678",
   "image_url": "http://example.com",
-  "role": "ADMIN"
+  "role": "MEMBER"
 }
 
 ###
@@ -22,7 +22,7 @@ POST {{baseUrl}}/sessions
 Content-Type: application/json
 
 {
-  "email": "john2doe@example.com",
+  "email": "usermember@example.com",
   "password": "12345678"
 }
 
