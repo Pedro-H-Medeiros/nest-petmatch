@@ -1,6 +1,8 @@
+import { MissingField } from '@/exceptions/missing-field.exception'
 import { CurrentUser } from '@/modules/auth/current-user.decorator'
 import { JwtAuthGuard } from '@/modules/auth/jwt-auth.guard'
 import { UserPayload } from '@/modules/auth/jwt.stategy'
+import { ZodValidationPipe } from '@/pipes/zod-validation.pipe'
 import { PrismaService } from '@/prisma/prisma.service'
 import {
   Body,
@@ -8,11 +10,12 @@ import {
   Controller,
   Patch,
   UseGuards,
+  UsePipes,
 } from '@nestjs/common'
 import { z } from 'zod'
 
 const updateOngControllerBodySchema = z.object({
-  name: z.string(),
+  name: z.string().optional(),
 })
 
 type UpdateOngControllerBodySchema = z.infer<
@@ -25,24 +28,28 @@ export class UpdateOngController {
   constructor(private prisma: PrismaService) {}
 
   @Patch()
-  // @UsePipes(new ZodValidationPipe(updateOngControllerBodySchema))
+  @UsePipes(new ZodValidationPipe(updateOngControllerBodySchema))
   async update(
     @CurrentUser() user: UserPayload,
     @Body() body: UpdateOngControllerBodySchema,
   ) {
     const { name } = body
 
-    const ongExists = await this.prisma.ong.findFirst({
+    if (!name) {
+      throw new MissingField('name')
+    }
+
+    const existingOng = await this.prisma.ong.findFirst({
       where: {
         name,
       },
     })
 
-    if (ongExists) {
+    if (existingOng) {
       throw new ConflictException('This ong name already exists.')
     }
 
-    const userAccount = await this.prisma.user.findUnique({
+    const { ong_id } = await this.prisma.user.findFirst({
       where: {
         id: user.sub,
       },
@@ -50,7 +57,7 @@ export class UpdateOngController {
 
     return await this.prisma.ong.update({
       where: {
-        id: userAccount.ong_id,
+        id: ong_id,
       },
       data: {
         name,

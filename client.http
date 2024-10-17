@@ -1,4 +1,4 @@
-@baseUrl = http://localhost:3333
+@baseUrl =  
 @authToken = {{authenticate.response.body.accessToken}}
 
 # @name create_account
@@ -56,7 +56,7 @@ Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-  "name": "Animal 1 Organization",
+  "name": "Animal 6 Organization",
   "description": "An organization dedicated to helping animals find homes.",
   "image_user": "https://example.com/image.jpg",
   "image_urls": [
@@ -79,5 +79,5 @@ Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-  "name": "Animal Organization"
+  "name": "Animal e1q23123 Organization"
 }
