@@ -1,4 +1,4 @@
-import { MissingField } from '@/exceptions/missing-field.exception'
+import { MissingFieldException } from '@/exceptions/missing-field.exception'
 import { CurrentUser } from '@/modules/auth/current-user.decorator'
 import { JwtAuthGuard } from '@/modules/auth/jwt-auth.guard'
 import { UserPayload } from '@/modules/auth/jwt.stategy'
@@ -36,7 +36,7 @@ export class UpdateOngController {
     const { name } = body
 
     if (!name) {
-      throw new MissingField('name')
+      throw new MissingFieldException('name')
     }
 
     const existingOng = await this.prisma.ong.findFirst({
