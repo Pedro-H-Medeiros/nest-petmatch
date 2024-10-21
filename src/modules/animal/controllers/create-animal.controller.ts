@@ -1,6 +1,8 @@
 import { CurrentUser } from '@/modules/auth/current-user.decorator'
 import { JwtAuthGuard } from '@/modules/auth/jwt-auth.guard'
 import { UserPayload } from '@/modules/auth/jwt.stategy'
+import { Role } from '@/modules/user/enum/user-roles.enum'
+import { Roles } from '@/modules/user/roles.decorator'
 import { PrismaService } from '@/prisma/prisma.service'
 import { Body, Controller, Post, UseGuards } from '@nestjs/common'
 import { AdoptionStatus } from '@prisma/client'
@@ -26,6 +28,7 @@ export class CreateAnimalController {
   constructor(private prisma: PrismaService) {}
 
   @Post()
+  @Roles(Role.Admin && Role.OngAdmin && Role.Member)
   // @UsePipes(new ZodValidationPipe(createAnimalControllerBodySchema))
   async create(
     @Body() body: CreateAnimalControllerBodySchema,
