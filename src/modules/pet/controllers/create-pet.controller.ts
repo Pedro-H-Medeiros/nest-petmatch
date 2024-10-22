@@ -1,14 +1,14 @@
 import { CurrentUser } from '@/modules/auth/current-user.decorator'
 import { JwtAuthGuard } from '@/modules/auth/jwt-auth.guard'
 import { UserPayload } from '@/modules/auth/jwt.stategy'
-import { Role } from '@/modules/user/enum/user-roles.enum'
-import { Roles } from '@/modules/user/roles.decorator'
+import { Role } from '@/modules/user/roles/enum/user-roles.enum'
+import { Roles } from '@/modules/user/roles/roles.decorator'
 import { PrismaService } from '@/prisma/prisma.service'
 import { Body, Controller, Post, UseGuards } from '@nestjs/common'
 import { AdoptionStatus } from '@prisma/client'
 import { z } from 'zod'
 
-const createAnimalControllerBodySchema = z.object({
+const createPetControllerBodySchema = z.object({
   name: z.string(),
   age: z.string().transform((val) => new Date(val)),
   sex: z.string(),
@@ -18,20 +18,20 @@ const createAnimalControllerBodySchema = z.object({
   image_urls: z.array(z.string().url()),
 })
 
-type CreateAnimalControllerBodySchema = z.infer<
-  typeof createAnimalControllerBodySchema
+type CreatePetControllerBodySchema = z.infer<
+  typeof createPetControllerBodySchema
 >
 
 @Controller('/pets')
 @UseGuards(JwtAuthGuard)
-export class CreateAnimalController {
+export class CreatePetController {
   constructor(private prisma: PrismaService) {}
 
   @Post()
   @Roles(Role.Admin && Role.OngAdmin && Role.Member)
-  // @UsePipes(new ZodValidationPipe(createAnimalControllerBodySchema))
+  // @UsePipes(new ZodValidationPipe(createPetControllerBodySchema))
   async create(
-    @Body() body: CreateAnimalControllerBodySchema,
+    @Body() body: CreatePetControllerBodySchema,
     @CurrentUser() user: UserPayload,
   ) {
     const { name, age, sex, race, color, adoption_status, image_urls } = body

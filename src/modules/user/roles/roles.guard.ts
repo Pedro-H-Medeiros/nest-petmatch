@@ -5,13 +5,13 @@ import {
   UnauthorizedException,
 } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
-import { ROLES_KEY } from '../roles.decorator'
-import { Role } from './user-roles.enum'
 import { PrismaService } from '@/prisma/prisma.service'
 import { JwtService } from '@nestjs/jwt'
 import { UserPayload } from '@/modules/auth/jwt.stategy'
 import { ConfigService } from '@nestjs/config'
 import { Env } from '@/env'
+import { Role } from './enum/user-roles.enum'
+import { ROLES_KEY } from './roles.decorator'
 
 @Injectable()
 export class RolesGuard implements CanActivate {

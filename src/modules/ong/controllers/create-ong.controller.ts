@@ -1,6 +1,6 @@
 import { JwtAuthGuard } from '@/modules/auth/jwt-auth.guard'
-import { Role } from '@/modules/user/enum/user-roles.enum'
-import { Roles } from '@/modules/user/roles.decorator'
+import { Role } from '@/modules/user/roles/enum/user-roles.enum'
+import { Roles } from '@/modules/user/roles/roles.decorator'
 import { ZodValidationPipe } from '@/pipes/zod-validation.pipe'
 import { PrismaService } from '@/prisma/prisma.service'
 import {
