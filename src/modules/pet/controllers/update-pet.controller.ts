@@ -46,7 +46,7 @@ export class UpdatePetController {
     const { ong_id, name, age, sex, race, color, adoption_status, image_urls } =
       body
 
-    const pet = await this.prisma.animal.findFirst({
+    const pet = await this.prisma.pet.findFirst({
       where: {
         id: petId,
       },
@@ -67,7 +67,7 @@ export class UpdatePetController {
     }
 
     try {
-      return await this.prisma.animal.update({
+      return await this.prisma.pet.update({
         where: {
           id: pet.id,
           ong_id: registeredUser.ong_id,
@@ -84,7 +84,7 @@ export class UpdatePetController {
         },
       })
     } catch (error) {
-      throw new NotFoundException('You no longer have access to the animal.')
+      throw new NotFoundException('You no longer have access to the pet.')
     }
   }
 }

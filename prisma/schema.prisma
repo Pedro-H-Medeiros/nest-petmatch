@@ -38,7 +38,7 @@ model User {
   @@map("users")
 }
 
-model Animal {
+model Pet {
   id              String         @id @default(uuid())
   ong_id          String
   name            String
@@ -53,7 +53,7 @@ model Animal {
   adoption Adoption[]
   ong      Ong        @relation(fields: [ong_id], references: [id])
 
-  @@map("animals")
+  @@map("pets")
 }
 
 model Ong {
@@ -64,8 +64,8 @@ model Ong {
   image_urls  String[]
   created_at  DateTime @default(now())
 
-  users   User[]
-  animals Animal[]
+  users User[]
+  pets  Pet[]
 
   @@map("ongs")
 }
@@ -73,11 +73,11 @@ model Ong {
 model Adoption {
   id         String   @id @default(uuid())
   user_id    String
-  animal_id  String
+  pet_id     String
   adopted_at DateTime
 
-  user   User   @relation(fields: [user_id], references: [id])
-  animal Animal @relation(fields: [animal_id], references: [id])
+  user User @relation(fields: [user_id], references: [id])
+  pet  Pet  @relation(fields: [pet_id], references: [id])
 
   @@map("adoptions")
 }

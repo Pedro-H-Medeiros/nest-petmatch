@@ -36,7 +36,7 @@ export class CreatePetController {
   ) {
     const { name, age, sex, race, color, adoption_status, image_urls } = body
 
-    return await this.prisma.animal.create({
+    return await this.prisma.pet.create({
       data: {
         ong_id: user.sub,
         name,
