@@ -13,8 +13,8 @@ import { ZodValidationPipe } from '@/pipes/zod-validation.pipe'
 import validator from 'validator'
 import { UserRole } from '@prisma/client'
 import { JwtAuthGuard } from '@/modules/auth/jwt-auth.guard'
-import { Roles } from '../roles.decorator'
-import { Role } from '../enum/user-roles.enum'
+import { Role } from '../roles/enum/user-roles.enum'
+import { Roles } from '../roles/roles.decorator'
 
 const createUserControllerBodySchema = z.object({
   name: z.string(),
