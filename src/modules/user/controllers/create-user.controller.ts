@@ -13,6 +13,8 @@ import { ZodValidationPipe } from '@/pipes/zod-validation.pipe'
 import validator from 'validator'
 import { UserRole } from '@prisma/client'
 import { JwtAuthGuard } from '@/modules/auth/jwt-auth.guard'
+import { Roles } from '../roles.decorator'
+import { Role } from '../enum/user-roles.enum'
 
 const createUserControllerBodySchema = z.object({
   name: z.string(),
@@ -34,6 +36,7 @@ export class CreateUserController {
   constructor(private prisma: PrismaService) {}
 
   @Post()
+  @Roles(Role.Admin && Role.OngAdmin)
   @UsePipes(new ZodValidationPipe(createUserControllerBodySchema))
   async create(@Body() body: CreateUserControllerBodySchema) {
     const { name, cpf, email, phone, password, image_url, role } = body

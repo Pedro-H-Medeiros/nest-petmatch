@@ -1,4 +1,6 @@
 import { JwtAuthGuard } from '@/modules/auth/jwt-auth.guard'
+import { Role } from '@/modules/user/enum/user-roles.enum'
+import { Roles } from '@/modules/user/roles.decorator'
 import { ZodValidationPipe } from '@/pipes/zod-validation.pipe'
 import { PrismaService } from '@/prisma/prisma.service'
 import {
@@ -26,6 +28,7 @@ export class CreateOngController {
   constructor(private prisma: PrismaService) {}
 
   @Post()
+  @Roles(Role.Admin)
   @UsePipes(new ZodValidationPipe(createOngControllerBodySchema))
   async create(@Body() body: CreateOngControllerSchema) {
     const { name, description, image_user, image_urls } = body
