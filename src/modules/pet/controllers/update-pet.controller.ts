@@ -1,6 +1,7 @@
 import { CurrentUser } from '@/modules/auth/current-user.decorator'
 import { JwtAuthGuard } from '@/modules/auth/jwt-auth.guard'
 import { UserPayload } from '@/modules/auth/jwt.stategy'
+import { ZodValidationPipe } from '@/pipes/zod-validation.pipe'
 
 import { PrismaService } from '@/prisma/prisma.service'
 import {
@@ -41,7 +42,8 @@ export class UpdatePetController {
   async update(
     @Param('petId') petId: string,
     @CurrentUser() user: UserPayload,
-    @Body() body: UpdatePetControllerBodySchema,
+    @Body(new ZodValidationPipe(updatePetControllerBodySchema))
+    body: UpdatePetControllerBodySchema,
   ) {
     const { ong_id, name, age, sex, race, color, adoption_status, image_urls } =
       body
@@ -66,14 +68,25 @@ export class UpdatePetController {
       throw new NotFoundException('User not found.')
     }
 
+    if (ong_id !== registeredUser.ong_id || ong_id !== pet.ong_id) {
+      throw new NotFoundException('You do not have access to this pet.')
+    }
+
+    const ongExists = await this.prisma.ong.findUnique({
+      where: { id: ong_id },
+    })
+
+    if (ong_id && !ongExists) {
+      throw new NotFoundException('Provided ONG not found.')
+    }
+
     try {
       return await this.prisma.pet.update({
         where: {
           id: pet.id,
-          ong_id: registeredUser.ong_id,
         },
         data: {
-          ong_id,
+          ong_id: ong_id || pet.ong_id,
           name,
           age,
           sex,
@@ -84,7 +97,7 @@ export class UpdatePetController {
         },
       })
     } catch (error) {
-      throw new NotFoundException('You no longer have access to the pet.')
+      throw new NotFoundException('Failed to update the pet.')
     }
   }
 }

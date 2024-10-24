@@ -4,7 +4,6 @@ import { JwtAuthGuard } from '@/modules/auth/jwt-auth.guard'
 import { UserPayload } from '@/modules/auth/jwt.stategy'
 import { Role } from '@/modules/user/roles/enum/user-roles.enum'
 import { Roles } from '@/modules/user/roles/roles.decorator'
-import { RolesGuard } from '@/modules/user/roles/roles.guard'
 import { ZodValidationPipe } from '@/pipes/zod-validation.pipe'
 import { PrismaService } from '@/prisma/prisma.service'
 import {
@@ -13,12 +12,12 @@ import {
   Controller,
   Patch,
   UseGuards,
-  UsePipes,
 } from '@nestjs/common'
 import { z } from 'zod'
 
 const updateOngControllerBodySchema = z.object({
   name: z.string().optional(),
+  image_urls: z.array(z.string().url()).optional(),
 })
 
 type UpdateOngControllerBodySchema = z.infer<
@@ -26,19 +25,18 @@ type UpdateOngControllerBodySchema = z.infer<
 >
 
 @Controller('instituation')
-@UseGuards(RolesGuard)
 @UseGuards(JwtAuthGuard)
 export class UpdateOngController {
   constructor(private prisma: PrismaService) {}
 
   @Patch()
-  @Roles(Role.OngAdmin && Role.Admin)
-  @UsePipes(new ZodValidationPipe(updateOngControllerBodySchema))
+  @Roles(Role.OngAdmin, Role.Admin)
   async update(
     @CurrentUser() user: UserPayload,
-    @Body() body: UpdateOngControllerBodySchema,
+    @Body(new ZodValidationPipe(updateOngControllerBodySchema))
+    body: UpdateOngControllerBodySchema,
   ) {
-    const { name } = body
+    const { name, image_urls } = body
 
     if (!name) {
       throw new MissingFieldException('name')
@@ -66,6 +64,7 @@ export class UpdateOngController {
       },
       data: {
         name,
+        image_urls,
       },
     })
   }

@@ -15,6 +15,7 @@ import { UserRole } from '@prisma/client'
 import { JwtAuthGuard } from '@/modules/auth/jwt-auth.guard'
 import { Role } from '../roles/enum/user-roles.enum'
 import { Roles } from '../roles/roles.decorator'
+import { RolesGuard } from '../roles/roles.guard'
 
 const createUserControllerBodySchema = z.object({
   name: z.string(),
@@ -32,11 +33,12 @@ type CreateUserControllerBodySchema = z.infer<
 
 @Controller('/accounts')
 @UseGuards(JwtAuthGuard)
+@UseGuards(RolesGuard)
 export class CreateUserController {
   constructor(private prisma: PrismaService) {}
 
   @Post()
-  @Roles(Role.Admin && Role.OngAdmin)
+  @Roles(Role.Admin, Role.OngAdmin)
   @UsePipes(new ZodValidationPipe(createUserControllerBodySchema))
   async create(@Body() body: CreateUserControllerBodySchema) {
     const { name, cpf, email, phone, password, image_url, role } = body
