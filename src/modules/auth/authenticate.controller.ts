@@ -3,12 +3,16 @@ import { PrismaService } from '@/prisma/prisma.service'
 import {
   Body,
   Controller,
+  Get,
   Post,
+  Req,
+  Res,
   UnauthorizedException,
   UsePipes,
 } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { compare } from 'bcryptjs'
+import { Response, Request } from 'express'
 import { z } from 'zod'
 
 const authenticateControllerBodySchema = z.object({
@@ -29,7 +33,10 @@ export class AuthenticateController {
 
   @Post()
   @UsePipes(new ZodValidationPipe(authenticateControllerBodySchema))
-  async handle(@Body() body: AuthenticateControllerBodySchema) {
+  async handle(
+    @Body() body: AuthenticateControllerBodySchema,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     const { email, password } = body
 
     const user = await this.prisma.user.findUnique({
@@ -47,9 +54,36 @@ export class AuthenticateController {
     }
 
     const accessToken = this.jwt.sign({ sub: user.id })
+    res.cookie('access_token', accessToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+      path: '/',
+      maxAge: 24 * 60 * 60 * 1000,
+      expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+    })
 
     return {
       accessToken,
+    }
+  }
+
+  @Get('validate')
+  async validateToken(@Req() req: Request) {
+    const token = req.cookies.access_token
+
+    if (!token) {
+      throw new UnauthorizedException('Token not found.')
+    }
+
+    try {
+      const payload = await this.jwt.verify(token)
+      return {
+        isValid: true,
+        payload,
+      }
+    } catch (error) {
+      throw new UnauthorizedException('Invalid or expired token.')
     }
   }
 }

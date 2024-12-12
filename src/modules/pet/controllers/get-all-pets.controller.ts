@@ -7,6 +7,8 @@ export class GetAllPetsController {
 
   @Get()
   async getAll() {
-    return this.prisma.pet.findMany()
+    const pets = await this.prisma.pet.findMany()
+
+    return { pets }
   }
 }

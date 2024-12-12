@@ -13,7 +13,7 @@ enum UserRole {
   ONG_ADMIN
   USER
 }
-
+  
 enum AdoptionStatus {
   AVAILABLE
   PENDING
