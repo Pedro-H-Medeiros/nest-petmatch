@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  output   = "./generated/client"
 }
 
 datasource db {
@@ -13,7 +14,7 @@ enum UserRole {
   ONG_ADMIN
   USER
 }
-  
+
 enum AdoptionStatus {
   AVAILABLE
   PENDING
