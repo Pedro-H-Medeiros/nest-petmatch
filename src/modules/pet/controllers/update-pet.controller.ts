@@ -12,8 +12,9 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common'
-import { AdoptionStatus } from '@prisma/client'
 import { z } from 'zod'
+
+const adoptionStatus = ['AVAILABLE', 'PENDING', 'ADOPTED'] as const
 
 const updatePetControllerBodySchema = z.object({
   ong_id: z.string().uuid().optional(),
@@ -25,7 +26,7 @@ const updatePetControllerBodySchema = z.object({
   sex: z.string().optional(),
   race: z.string().optional(),
   color: z.string().optional(),
-  adoption_status: z.nativeEnum(AdoptionStatus).optional(),
+  adoption_status: z.enum(adoptionStatus).optional(),
   image_urls: z.array(z.string().url()).optional(),
 })
 

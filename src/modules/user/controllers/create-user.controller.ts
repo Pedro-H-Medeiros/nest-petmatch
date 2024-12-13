@@ -10,7 +10,8 @@ import { hash } from 'bcryptjs'
 import { z } from 'zod'
 import { ZodValidationPipe } from '@/pipes/zod-validation.pipe'
 import validator from 'validator'
-import { UserRole } from '@prisma/client'
+
+const userRole = ['MEMBER', 'ADMIN', 'ONG_ADMIN', 'USER'] as const
 
 const createUserControllerBodySchema = z.object({
   name: z.string(),
@@ -19,7 +20,7 @@ const createUserControllerBodySchema = z.object({
   phone: z.string().refine(validator.isMobilePhone),
   password: z.string().min(8),
   image_url: z.string(),
-  role: z.nativeEnum(UserRole).optional(),
+  role: z.enum(userRole).optional(),
 })
 
 type CreateUserControllerBodySchema = z.infer<

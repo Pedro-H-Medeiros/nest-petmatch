@@ -7,8 +7,9 @@ import { RolesGuard } from '@/modules/user/roles/roles.guard'
 import { ZodValidationPipe } from '@/pipes/zod-validation.pipe'
 import { PrismaService } from '@/prisma/prisma.service'
 import { Body, Controller, Post, UseGuards } from '@nestjs/common'
-import { AdoptionStatus } from '@prisma/client'
 import { z } from 'zod'
+
+const adoptionStatus = ['AVAILABLE', 'PENDING', 'ADOPTED'] as const
 
 const createPetControllerBodySchema = z.object({
   ong_id: z.string().uuid().optional(),
@@ -17,7 +18,7 @@ const createPetControllerBodySchema = z.object({
   sex: z.string(),
   race: z.string(),
   color: z.string(),
-  adoption_status: z.nativeEnum(AdoptionStatus).default('AVAILABLE'),
+  adoption_status: z.enum(adoptionStatus).default('AVAILABLE'),
   image_urls: z.array(z.string().url()),
 })
 
