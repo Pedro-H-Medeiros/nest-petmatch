@@ -1,0 +1,84 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  MEMBER
+  ADMIN
+  ONG_ADMIN
+  USER
+}
+
+enum AdoptionStatus {
+  AVAILABLE
+  PENDING
+  ADOPTED
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  cpf       String   @unique
+  phone     String   @unique
+  name      String
+  password  String
+  image_url String
+  role      UserRole
+
+  ong_id String?
+  ong    Ong?    @relation(fields: [ong_id], references: [id])
+
+  adoption Adoption[]
+
+  @@map("users")
+}
+
+model Pet {
+  id              String         @id @default(uuid())
+  ong_id          String
+  name            String
+  age             DateTime
+  sex             String
+  race            String
+  color           String
+  adoption_status AdoptionStatus @default(AVAILABLE)
+  image_urls      String[]
+  created_at      DateTime       @default(now())
+
+  adoption Adoption[]
+  ong      Ong        @relation(fields: [ong_id], references: [id])
+
+  @@map("pets")
+}
+
+model Ong {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String
+  image_user  String
+  image_urls  String[]
+  created_at  DateTime @default(now())
+
+  users User[]
+  pets  Pet[]
+
+  @@map("ongs")
+}
+
+model Adoption {
+  id         String   @id @default(uuid())
+  user_id    String
+  pet_id     String
+  adopted_at DateTime
+
+  user User @relation(fields: [user_id], references: [id])
+  pet  Pet  @relation(fields: [pet_id], references: [id])
+
+  @@map("adoptions")
+}
