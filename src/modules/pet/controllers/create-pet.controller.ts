@@ -17,7 +17,7 @@ const createPetControllerBodySchema = z.object({
   age: z.string().transform((date) => new Date(date)),
   sex: z.string(),
   race: z.string(),
-  color: z.string(),
+  type: z.string(),
   adoption_status: z.enum(adoptionStatus).default('AVAILABLE'),
   image_urls: z.array(z.string().url()),
 })
@@ -39,7 +39,7 @@ export class CreatePetController {
     @Body(new ZodValidationPipe(createPetControllerBodySchema))
     body: CreatePetControllerBodySchema,
   ) {
-    const { ong_id, name, age, sex, race, color, adoption_status, image_urls } =
+    const { ong_id, name, age, sex, race, type, adoption_status, image_urls } =
       body
 
     const registeredUser = await this.prisma.user.findUnique({
@@ -55,7 +55,7 @@ export class CreatePetController {
         age,
         sex,
         race,
-        color,
+        type,
         adoption_status,
         image_urls,
       },

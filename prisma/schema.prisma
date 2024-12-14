@@ -31,7 +31,7 @@ model User {
   role      UserRole
 
   ong_id String?
-  ong    Ong?    @relation(fields: [ong_id], references: [id])
+  ong    Ong?    @relation(fields: [ong_id], references: [id], onDelete: SetNull)
 
   adoption Adoption[]
 
@@ -45,13 +45,13 @@ model Pet {
   age             DateTime
   sex             String
   race            String
-  color           String
+  type            String
   adoption_status AdoptionStatus @default(AVAILABLE)
   image_urls      String[]
   created_at      DateTime       @default(now())
 
   adoption Adoption[]
-  ong      Ong        @relation(fields: [ong_id], references: [id])
+  ong      Ong        @relation(fields: [ong_id], references: [id], onDelete: Cascade)
 
   @@map("pets")
 }
@@ -76,8 +76,8 @@ model Adoption {
   pet_id     String
   adopted_at DateTime
 
-  user User @relation(fields: [user_id], references: [id])
-  pet  Pet  @relation(fields: [pet_id], references: [id])
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  pet  Pet  @relation(fields: [pet_id], references: [id], onDelete: Cascade)
 
   @@map("adoptions")
 }

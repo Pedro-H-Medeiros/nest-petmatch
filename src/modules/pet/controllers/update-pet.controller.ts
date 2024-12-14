@@ -25,7 +25,7 @@ const updatePetControllerBodySchema = z.object({
     .optional(),
   sex: z.string().optional(),
   race: z.string().optional(),
-  color: z.string().optional(),
+  type: z.string().optional(),
   adoption_status: z.enum(adoptionStatus).optional(),
   image_urls: z.array(z.string().url()).optional(),
 })
@@ -46,7 +46,7 @@ export class UpdatePetController {
     @Body(new ZodValidationPipe(updatePetControllerBodySchema))
     body: UpdatePetControllerBodySchema,
   ) {
-    const { ong_id, name, age, sex, race, color, adoption_status, image_urls } =
+    const { ong_id, name, age, sex, race, type, adoption_status, image_urls } =
       body
 
     const pet = await this.prisma.pet.findFirst({
@@ -92,7 +92,7 @@ export class UpdatePetController {
           age,
           sex,
           race,
-          color,
+          type,
           adoption_status,
           image_urls,
         },
