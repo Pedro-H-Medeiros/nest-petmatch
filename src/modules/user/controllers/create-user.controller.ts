@@ -9,7 +9,6 @@ import { PrismaService } from '@/prisma/prisma.service'
 import { hash } from 'bcryptjs'
 import { z } from 'zod'
 import { ZodValidationPipe } from '@/pipes/zod-validation.pipe'
-import validator from 'validator'
 
 const userRole = ['MEMBER', 'ADMIN', 'ONG_ADMIN', 'USER'] as const
 
@@ -17,9 +16,7 @@ const createUserControllerBodySchema = z.object({
   name: z.string(),
   cpf: z.string(),
   email: z.string().email(),
-  phone: z.string().refine(validator.isMobilePhone),
   password: z.string().min(8),
-  image_url: z.string(),
   role: z.enum(userRole).optional(),
 })
 
@@ -34,12 +31,11 @@ export class CreateUserController {
   @Post()
   @UsePipes(new ZodValidationPipe(createUserControllerBodySchema))
   async create(@Body() body: CreateUserControllerBodySchema) {
-    const { name, cpf, email, phone, password, image_url, role } = body
+    const { name, cpf, email, password, role } = body
 
     const existingUser = await Promise.all([
       this.userAlreadyExists('cpf', cpf),
       this.userAlreadyExists('email', email),
-      this.userAlreadyExists('phone', phone),
     ])
 
     if (existingUser.some((user) => user)) {
@@ -53,18 +49,13 @@ export class CreateUserController {
         name,
         cpf,
         email,
-        phone,
         password: passwordHash,
-        image_url,
         role: role || 'MEMBER',
       },
     })
   }
 
-  private async userAlreadyExists(
-    field: 'cpf' | 'email' | 'phone',
-    value: string,
-  ) {
+  private async userAlreadyExists(field: 'cpf' | 'email', value: string) {
     return await this.prisma.user.findFirst({
       where: { [field]: value },
     })

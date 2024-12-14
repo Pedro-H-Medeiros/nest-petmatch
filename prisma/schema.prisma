@@ -24,10 +24,10 @@ model User {
   id        String   @id @default(uuid())
   email     String   @unique
   cpf       String   @unique
-  phone     String   @unique
+  phone     String?  @unique
   name      String
   password  String
-  image_url String
+  image_url String?
   role      UserRole
 
   ong_id String?
