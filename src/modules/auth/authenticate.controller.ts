@@ -1,3 +1,4 @@
+import { Env } from '@/env'
 import { ZodValidationPipe } from '@/pipes/zod-validation.pipe'
 import { PrismaService } from '@/prisma/prisma.service'
 import {
@@ -10,6 +11,7 @@ import {
   UnauthorizedException,
   UsePipes,
 } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
 import { compare } from 'bcryptjs'
 import { Response, Request } from 'express'
@@ -27,6 +29,7 @@ type AuthenticateControllerBodySchema = z.infer<
 @Controller('sessions')
 export class AuthenticateController {
   constructor(
+    private config: ConfigService<Env, true>,
     private jwt: JwtService,
     private prisma: PrismaService,
   ) {}
@@ -53,7 +56,14 @@ export class AuthenticateController {
       throw new UnauthorizedException('User credentials does not match.')
     }
 
-    const accessToken = this.jwt.sign({ sub: user.id })
+    const accessToken = this.jwt.sign(
+      { sub: user.id },
+      {
+        privateKey: this.config.get('JWT_PRIVATE_KEY'),
+        algorithm: 'RS256',
+      },
+    )
+
     res.cookie('access_token', accessToken, {
       httpOnly: true,
       secure: true,
