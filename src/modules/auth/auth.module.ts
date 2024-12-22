@@ -22,7 +22,7 @@ import { PrismaService } from '@/prisma/prisma.service'
           privateKey: Buffer.from(privateKey, 'base64'),
           publicKey: Buffer.from(publicKey, 'base64'),
           signOptions: {
-            expiresIn: '3h',
+            expiresIn: '1d',
             algorithm: 'RS256',
           },
         }

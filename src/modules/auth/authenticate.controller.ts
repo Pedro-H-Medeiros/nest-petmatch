@@ -56,16 +56,9 @@ export class AuthenticateController {
       throw new UnauthorizedException('User credentials does not match.')
     }
 
-    const accessToken = this.jwt.sign(
-      { sub: user.id },
-      {
-        privateKey: this.config.get('JWT_PRIVATE_KEY'),
-        algorithm: 'RS256',
-      },
-    )
+    const accessToken = this.jwt.sign({ sub: user.id })
 
     res.cookie('access_token', accessToken, {
-      httpOnly: true,
       secure: true,
       sameSite: 'none',
       path: '/',
